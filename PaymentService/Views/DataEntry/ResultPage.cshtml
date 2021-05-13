@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "ResultPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    *{
+        text-align:center;
+    }
+</style>
+<h2>Payment Final Result</h2>
+
+
+@if (TempData["Result"].ToString() == "SUCCESS")
+{
+<div>Payment has been Approved Congratz! CODE:@TempData["Code"]</div>
+}
+else if (TempData["Result"].ToString() == "STILL")
+{
+<div>Transaction still in processing mode CODE:@TempData["Code"]</div>
+}
+
+else if (TempData["Result"].ToString() == "PENDING")
+{
+<div>Payment is pending CODE:@TempData["Code"]</div>
+}
+else if (TempData["Result"].ToString() == "INVALIDCARD")
+{
+    <div>Invalid card , payment failed. CODE:@TempData["Code"]</div>
+}
+else if (TempData["Result"].ToString() == "OTHER")
+{
+    <div>Payment failed.</div>
+}
+else if (TempData["Result"].ToString() == "EXCEED")
+{
+<div>You reached out the maximum tryings ,try later! CODE:@TempData["Code"]</div>
+}
+
+

@@ -1,0 +1,174 @@
+﻿@model PaymentService.Models.transactions
+
+@{
+    ViewBag.Title = "PreviewPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    body {
+        background-color: burlywood;
+        display: block;
+    }
+
+    .editor-field {
+        position: center;
+        display: table-row;
+    }
+
+    .btn-success {
+        padding-left: 100px;
+        padding-right: 100px;
+        color: #fff;
+        background-color: #5cb85c;
+        border-color: #4cae4c;
+    }
+    .container {
+        padding-right: 15px;
+        padding-left: 250px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    h1{
+        padding-left:-350px;
+        padding-right:220px;
+    }
+    .btn-group {
+        padding-right: 200px;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js" type="text/javascript"></script>
+<!--include jQuery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"
+        type="text/javascript"></script>
+<!--include jQuery Validation Plugin-->
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"
+        type="text/javascript"></script>
+<script type="text/javascript">
+    function CheckData() {
+        var txtCardHolderName = $('#card_holder_name');
+        var txtCardNumber = $('#card_number').val();
+        var txtcvv = $('#cvv').val();
+        var txtexp_month = $('#expdate_month').val();
+        var txtexp_year = $('#expdate_year').val();
+        if (txtCardNumber == "") {
+            return;
+        }
+        else if (txtcvv == "") {
+            return;
+        }
+        else if (txtexp_month == "") {
+            return;
+        }
+        else if (txtexp_year == "") {
+            return;
+        }
+        else if (txtCardHolderName == "") {
+            return;
+        }
+        else {
+            var key = CryptoJS.enc.Utf8.parse('8080808080808080');
+            var iv = CryptoJS.enc.Utf8.parse('8080808080808080');
+            var encrypted_cardholder_name = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtCardHolderName), key,
+                { keySize: 128 / 8, iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            var encrypted_cardnumber = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtCardNumber), key,
+                { keySize: 128 / 8, iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            $('#card_number').val(encrypted_cardnumber);
+            var encrypted_cvv = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtcvv), key,
+                { keySize: 128 / 8, iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            $('#cvv').val(encrypted_cvv);
+            var encrypted_expmonth = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtexp_month), key,
+                { keySize: 128 / 8, iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            $('#expdate_month').val(encrypted_expmonth);
+            var encrypted_expyear = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(txtexp_year), key,
+                { keySize: 128 / 8, iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });
+            $('#expdate_year').val(encrypted_expyear);
+        }
+    }
+</script>
+
+<style>
+    * {
+        text-align: center;
+    }
+
+</style>
+
+<head>
+</head>
+@using (Html.BeginForm())
+{
+    <body>
+        <div>
+            <h1>Preview Page</h1><br />
+            <div class="container">
+                <div class="editor-field">
+                    <label>Customer Name</label>
+                    @Html.EditorFor(model => model.card_holder_name, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.card_holder_name)
+                </div>
+                <div class="editor-field">
+                    <label>Card Number</label>
+                    @Html.EditorFor(model => model.card_number, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.card_number)
+                </div>
+                <div class="editor-field">
+                    <label>Exp Month</label>
+                    @Html.EditorFor(model => model.expdate_month, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.expdate_month)
+                </div>
+                <div class="editor-field">
+                    <label>Exp Year</label>
+                    @Html.EditorFor(model => model.expdate_year, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.expdate_year)
+                </div>
+                <div class="editor-field">
+                    <label>Email</label>
+                    @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.email)
+                </div>
+                <div class="editor-field">
+                    <label>City</label>
+                    @Html.EditorFor(model => model.city, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.city)
+                </div>
+                <div class="editor-field">
+                    <label>Phone number</label>
+                    @Html.EditorFor(model => model.phone, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.phone)
+                </div>
+                <div class="editor-field">
+                    <label>Amount</label>
+                </div>
+                <div class="editor-field">
+                    @Html.EditorFor(model => model.country, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.country)
+                </div>
+
+                <div class="editor-field">
+                    <label>CVV</label>
+                    @Html.EditorFor(model => model.cvv, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.cvv)
+                </div>
+
+                <div class="editor-field">
+                    <label>ZIP</label>
+                    @Html.EditorFor(model => model.zip, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.zip)
+                </div>
+
+                <div class="editor-field">
+                    <label>Address</label>
+                    @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                    @Html.HiddenFor(model => model.address)
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="submit" onclick="CheckData();" class="btn-success" value="PayNow">Pay Now</button>
+            </div>
+        </div>
+    </body>
+}
